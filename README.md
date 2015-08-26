@@ -2,7 +2,7 @@
 A simple material themed android client app of www.rottentomatoes.com
 
 
-
+![alt tag](https://raw.githubusercontent.com/HasanAliKaraca/RottenTomatoesMaterialSample/master/screenshot/SS.png)
   
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
   
