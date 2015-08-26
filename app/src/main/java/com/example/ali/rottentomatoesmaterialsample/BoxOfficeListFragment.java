@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,7 +45,8 @@ public class BoxOfficeListFragment extends Fragment {
     private RecyclerView rv;
     private BoxOfficeMoviesRecyclerViewAdapter adapter;
     private Context context;
-
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private View view;
 
     private void fetchBoxOfficeMoviesWithDummyData() {
         mMoviesList = BoxOfficeMovie.getDummyData();
@@ -59,11 +61,10 @@ public class BoxOfficeListFragment extends Fragment {
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                JSONArray items = null;
                 try {
 
                     // Get the movies json array
-                    items = response.getJSONArray("movies");
+                    JSONArray items = response.getJSONArray("movies");
                     // Parse json array into array of model objects
                     ArrayList<BoxOfficeMovie> movies = BoxOfficeMovie.fromJson(items);
                     UpdateBoxOfficeMoviesListModel(movies);
@@ -81,19 +82,32 @@ public class BoxOfficeListFragment extends Fragment {
         };
         //client.getBoxOfficeMovies(this, responseListener, errorListener);
         client.getBoxOfficeMovies(context, responseListener, errorListener);
+
+        mSwipeRefreshLayout.setRefreshing(false);
     }
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rv = (RecyclerView) inflater.inflate(R.layout.fragment_box_office_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_box_office_list, container, false);
+
+        rv = (RecyclerView) view.findViewById(R.id.recyclerview);
         rv.setLayoutManager(new LinearLayoutManager(rv.getContext()));
         context = getActivity();
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchBoxOfficeMovies();
+            }
+        });
 
         //fetchBoxOfficeMoviesWithDummyData();
         fetchBoxOfficeMovies();
 
-        return rv;
+        return view;
     }
 
     private void UpdateBoxOfficeMoviesListModel(ArrayList<BoxOfficeMovie> moviesList) {

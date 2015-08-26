@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
+        BoxOfficeMoviesFragmentPagerAdapter adapter = new BoxOfficeMoviesFragmentPagerAdapter(getSupportFragmentManager());
 
         boxOfficeListFragment = new BoxOfficeListFragment();
 
@@ -127,11 +127,11 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    static class Adapter extends FragmentPagerAdapter {
+    static class BoxOfficeMoviesFragmentPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
 
-        public Adapter(FragmentManager fm) {
+        public BoxOfficeMoviesFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
